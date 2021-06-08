@@ -18,22 +18,13 @@ namespace Bunnings
             }
 
             foreach (var arg in args)
-            {
                 if (!File.Exists(arg))
                 {
                     Message = $"{arg} does not exist";
                     return false;
-
                 }
 
-            }
             return true;
         }
-
     }
-
-
-
 }
-
-     

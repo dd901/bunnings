@@ -14,12 +14,10 @@ namespace Bunnings
         {
             try
             {
-
                 using (var reader = new StreamReader(fileToImport))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     return csv.GetRecords<T>().ToList();
-
                 }
             }
             catch (Exception e)
@@ -29,9 +27,8 @@ namespace Bunnings
             }
         }
 
-    
 
-    public void Export<T>(string fileName, IEnumerable<T> toExport)
+        public void Export<T>(string fileName, IEnumerable<T> toExport)
         {
             try
             {
@@ -45,13 +42,7 @@ namespace Bunnings
             {
                 Console.WriteLine(e);
                 throw;
-
             }
-
         }
-
     }
-
-
-
 }

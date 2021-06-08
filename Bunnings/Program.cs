@@ -14,7 +14,7 @@ namespace Bunnings
                 var transformDataService = getService<ITransformDataService>(serviceProvider);
                 var verificationService = getService<IVerificationService>(serviceProvider);
 
-                var app = new App( verificationService, csvImportExportService, transformDataService);
+                var app = new App(verificationService, csvImportExportService, transformDataService);
                 app.Run(args);
             }
         }

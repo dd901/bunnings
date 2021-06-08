@@ -12,7 +12,6 @@ namespace BunningsTest.AppTest
     {
         public class Run
         {
-
             [Test]
             public void Given_An_InValid_Input_Then_A_Exception_Is_Thrown()
             {
@@ -21,14 +20,13 @@ namespace BunningsTest.AppTest
                 var transformDataServicesMock = new Mock<ITransformDataService>();
 
                 verificationServiceMock.Setup(x => x.ValidInputs(It.IsAny<List<string>>())).Returns(false);
-                
+
                 var app = new App(verificationServiceMock.Object, csvImportExportServicesMock.Object, transformDataServicesMock.Object);
 
 
-                Assert.Throws<Exception>(() => app.Run(new string[]{}));
-
+                Assert.Throws<Exception>(() => app.Run(new string[] { }));
             }
-            
+
             [Test]
             public void Given_An_File_That_Cannot_Be_Imported_Then_A_Exception_Is_Thrown()
             {
@@ -39,12 +37,11 @@ namespace BunningsTest.AppTest
                 verificationServiceMock.Setup(x => x.ValidInputs(It.IsAny<List<string>>())).Returns(true);
 
                 csvImportExportServicesMock.Setup(x => x.Import<SupplierProductBarcode>(It.IsAny<string>())).Throws<Exception>();
-                
+
                 var app = new App(verificationServiceMock.Object, csvImportExportServicesMock.Object, transformDataServicesMock.Object);
 
 
-                Assert.Throws<Exception>(() => app.Run(new string[]{}));
-
+                Assert.Throws<Exception>(() => app.Run(new string[] { }));
             }
         }
     }
