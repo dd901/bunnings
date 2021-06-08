@@ -1,10 +1,10 @@
-#Code Skills Challenge
+# Code Skills Challenge
 
-##Dependencies
+## Dependencies
 .NET Core 5.0
 
-#Building
-##From IDE
+# Building
+## From IDE
 open the .sln in your favourite .net ide and build the solution from there.
 
 ## From CLI
