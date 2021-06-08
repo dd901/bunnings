@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bunnings", "Bunnings\Bunnings.csproj", "{920B1759-1BE6-41A3-8D4E-D1624923D342}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BunningsTest", "BunningsTest\BunningsTest.csproj", "{A99439CA-F847-4C68-9FEA-AA7DD8D5D618}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{920B1759-1BE6-41A3-8D4E-D1624923D342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{920B1759-1BE6-41A3-8D4E-D1624923D342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{920B1759-1BE6-41A3-8D4E-D1624923D342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{920B1759-1BE6-41A3-8D4E-D1624923D342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A99439CA-F847-4C68-9FEA-AA7DD8D5D618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A99439CA-F847-4C68-9FEA-AA7DD8D5D618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A99439CA-F847-4C68-9FEA-AA7DD8D5D618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A99439CA-F847-4C68-9FEA-AA7DD8D5D618}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
