@@ -3,30 +3,30 @@ using Bunnings.Entities;
 
 namespace BunningsTest.TransformDataServiceTests
 {
-    public class TestHarness_Company
+    public class TestHarnessCompany
     {
-        private readonly Company company;
+        private readonly Company _company;
 
-        public TestHarness_Company(string companyName)
+        public TestHarnessCompany(string companyName)
         {
-            company = new Company(companyName, new List<Catalog>(), new List<SupplierProductBarcode>());
+            _company = new Company(companyName, new List<Catalog>(), new List<SupplierProductBarcode>());
         }
 
-        public TestHarness_Company With_SupplierProductBarcode(int SupplierID, string SKU, string Barcode)
+        public TestHarnessCompany WithSupplierProductBarcode(int supplierId, string sku, string barcode)
         {
-            company.AddSupplierProductBarcode(SupplierID, SKU, Barcode);
+            _company.AddSupplierProductBarcode(supplierId, sku, barcode);
             return this;
         }
 
-        public TestHarness_Company With_Catalog(string sku, string description)
+        public TestHarnessCompany WithCatalog(string sku, string description)
         {
-            company.AddCatalog(sku, description);
+            _company.AddCatalog(sku, description);
             return this;
         }
 
         public Company Build()
         {
-            return company;
+            return _company;
         }
     }
 }

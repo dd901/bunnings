@@ -8,6 +8,5 @@ namespace Bunnings.Interfaces
         SupplierProductBarcode[] GetCompanyBSKUWhichHaveDuplicateBarcodesInCompanyA(Company barcodesA, Company barcodesB);
         IEnumerable<SupplierProductBarcode> GetDuplicateSupplierProductBarcodesFromCompanyB(Company barcodesA, Company barcodesB);
         IEnumerable<CommonCatalog> CreateCommonCatalog(Company companyA, Company companyB, IEnumerable<SupplierProductBarcode> duplicateSku);
-        void addNewSKU(IEnumerable<SupplierProductBarcode> duplicateSku, IEnumerable<Catalog> catalogA, List<CommonCatalog> combined, string s);
     }
 }

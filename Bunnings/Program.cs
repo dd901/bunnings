@@ -21,7 +21,7 @@ namespace Bunnings
 
         private static T getService<T>(ServiceProvider serviceProvider)
         {
-            return serviceProvider.GetService<T>() ?? throw new ArgumentNullException("serviceProvider.GetService<ICsvImportExportService>()");
+            return serviceProvider.GetService<T>() ?? throw new ArgumentNullException();
         }
 
         private static ServiceProvider ConfigureServices(ServiceCollection serviceCollection)

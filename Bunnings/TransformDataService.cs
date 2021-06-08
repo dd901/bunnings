@@ -39,20 +39,12 @@ namespace Bunnings
 
             var barcodesBGrouped = companyB.SupplierProductBarcodes.GroupBy(x => x.SKU).Select(x => x.Key);
 
-            foreach (var barcodesBSKU in barcodesBGrouped)
-                if (duplicateSku.All(x => x.SKU != barcodesBSKU))
-                    combined.Add(new CommonCatalog(barcodesBSKU, companyB.Catalogs.Where(y => y.SKU == barcodesBSKU).First().Description, companyB.Name));
+            foreach (var barcodesBsku in barcodesBGrouped)
+                if (duplicateSku.All(x => x.SKU != barcodesBsku))
+                    combined.Add(new CommonCatalog(barcodesBsku, companyB.Catalogs.Where(y => y.SKU == barcodesBsku).First().Description, companyB.Name));
 
 
             return combined;
-        }
-
-
-        public void addNewSKU(IEnumerable<SupplierProductBarcode> duplicateSku, IEnumerable<Catalog> catalogA, List<CommonCatalog> combined, string s)
-        {
-            foreach (var groupedProducts in duplicateSku.GroupBy(x => x.SKU))
-                if (combined.All(x => x.SKU != groupedProducts.Key))
-                    combined.Add(new CommonCatalog(groupedProducts.Key, catalogA.First(y => y.SKU == groupedProducts.Key).Description, s));
         }
     }
 }

@@ -14,12 +14,12 @@ namespace BunningsTest.TransformDataServiceTests
             public void Given_No_Duplicate_Barcodes_Then_Then_Return_Empty_Result()
             {
                 //arrange
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", "1")
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", "1")
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, "b", "2")
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, "b", "2")
                     .Build();
 
                 //act
@@ -33,16 +33,16 @@ namespace BunningsTest.TransformDataServiceTests
             public void Given_Multiple_No_Duplicate_Barcodes_Then_Then_Return_Empty_Result()
             {
                 //arrange
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", "1")
-                    .With_SupplierProductBarcode(1, "a", "2")
-                    .With_SupplierProductBarcode(1, "a", "3")
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", "1")
+                    .WithSupplierProductBarcode(1, "a", "2")
+                    .WithSupplierProductBarcode(1, "a", "3")
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(1, "b", "4")
-                    .With_SupplierProductBarcode(1, "b", "5")
-                    .With_SupplierProductBarcode(1, "b", "6")
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(1, "b", "4")
+                    .WithSupplierProductBarcode(1, "b", "5")
+                    .WithSupplierProductBarcode(1, "b", "6")
                     .Build();
 
                 //act
@@ -58,20 +58,21 @@ namespace BunningsTest.TransformDataServiceTests
                 //arrange
                 var barcodeDuplicate = "1";
                 var skuForCompanyB = "b";
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicate)
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicate)
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicate)
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicate)
                     .Build();
 
                 //act
                 var duplicateSPBFromCompanyB = new TransformDataService().GetDuplicateSupplierProductBarcodesFromCompanyB(companyA, companyB);
 
                 //arrange
-                Assert.IsTrue(duplicateSPBFromCompanyB.Count() == 1);
-                Assert.IsTrue(duplicateSPBFromCompanyB.All(x => x.Barcode == barcodeDuplicate && x.SupplierID == 2 && x.SKU == skuForCompanyB));
+                var duplicateSpbFromCompanyB = duplicateSPBFromCompanyB.ToList();
+                Assert.IsTrue(duplicateSpbFromCompanyB.Count() == 1);
+                Assert.IsTrue(duplicateSpbFromCompanyB.All(x => x.Barcode == barcodeDuplicate && x.SupplierID == 2 && x.SKU == skuForCompanyB));
             }
 
             [Test]
@@ -81,23 +82,34 @@ namespace BunningsTest.TransformDataServiceTests
                 var barcodeDuplicateFirst = "1";
                 var barcodeDuplicateSecond = "2";
                 var skuForCompanyB = "b";
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateSecond)
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateSecond)
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateSecond)
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateSecond)
                     .Build();
 
                 //act
                 var duplicateSPBFromCompanyB = new TransformDataService().GetDuplicateSupplierProductBarcodesFromCompanyB(companyA, companyB);
 
                 //arrange
-                Assert.IsTrue(duplicateSPBFromCompanyB.Count() == 2);
-                Assert.IsTrue(duplicateSPBFromCompanyB.Any(x => x.Barcode == barcodeDuplicateFirst && x.SupplierID == 2 && x.SKU == skuForCompanyB));
-                Assert.IsTrue(duplicateSPBFromCompanyB.Any(x => x.Barcode == barcodeDuplicateSecond && x.SupplierID == 2 && x.SKU == skuForCompanyB));
+                var duplicateSpbFromCompanyB = duplicateSPBFromCompanyB.ToList();
+                Assert.IsTrue(duplicateSpbFromCompanyB.Count() == 2);
+                bool any = false;
+                foreach (var x in duplicateSpbFromCompanyB)
+                {
+                    if (x.Barcode == barcodeDuplicateFirst && x.SupplierID == 2 && x.SKU == skuForCompanyB)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                Assert.IsTrue(any);
+                Assert.IsTrue(duplicateSpbFromCompanyB.Any(x => x.Barcode == barcodeDuplicateSecond && x.SupplierID == 2 && x.SKU == skuForCompanyB));
             }
 
             [Test]
@@ -107,27 +119,28 @@ namespace BunningsTest.TransformDataServiceTests
                 var barcodeDuplicateFirst = "1";
                 var barcodeDuplicateSecond = "2";
                 var skuForCompanyB = "b";
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateSecond)
-                    .With_SupplierProductBarcode(1, "a", "3")
-                    .With_SupplierProductBarcode(1, "a", "4")
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateSecond)
+                    .WithSupplierProductBarcode(1, "a", "3")
+                    .WithSupplierProductBarcode(1, "a", "4")
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateSecond)
-                    .With_SupplierProductBarcode(2, skuForCompanyB, "6")
-                    .With_SupplierProductBarcode(2, skuForCompanyB, "5")
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateSecond)
+                    .WithSupplierProductBarcode(2, skuForCompanyB, "6")
+                    .WithSupplierProductBarcode(2, skuForCompanyB, "5")
                     .Build();
 
                 //act
                 var duplicateSPBFromCompanyB = new TransformDataService().GetDuplicateSupplierProductBarcodesFromCompanyB(companyA, companyB);
 
                 //arrange
-                Assert.IsTrue(duplicateSPBFromCompanyB.Count() == 2);
-                Assert.IsTrue(duplicateSPBFromCompanyB.Any(x => x.Barcode == barcodeDuplicateFirst && x.SupplierID == 2 && x.SKU == skuForCompanyB));
-                Assert.IsTrue(duplicateSPBFromCompanyB.Any(x => x.Barcode == barcodeDuplicateSecond && x.SupplierID == 2 && x.SKU == skuForCompanyB));
+                var duplicateSpbFromCompanyB = duplicateSPBFromCompanyB.ToList();
+                Assert.IsTrue(duplicateSpbFromCompanyB.Count() == 2);
+                Assert.IsTrue(duplicateSpbFromCompanyB.Any(x => x.Barcode == barcodeDuplicateFirst && x.SupplierID == 2 && x.SKU == skuForCompanyB));
+                Assert.IsTrue(duplicateSpbFromCompanyB.Any(x => x.Barcode == barcodeDuplicateSecond && x.SupplierID == 2 && x.SKU == skuForCompanyB));
             }
         }
 
@@ -137,12 +150,12 @@ namespace BunningsTest.TransformDataServiceTests
             public void Given_No_Duplicate_Barcodes_Then_Then_Return_Empty_Result()
             {
                 //arrange
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", "1")
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", "1")
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, "b", "2")
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, "b", "2")
                     .Build();
 
                 //act
@@ -159,14 +172,14 @@ namespace BunningsTest.TransformDataServiceTests
                 var barcodeDuplicateFirst = "1";
                 var barcodeDuplicateSecond = "2";
                 var skuForCompanyB = "aa-bb";
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateSecond)
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateSecond)
                     .Build();
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateSecond)
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(2, skuForCompanyB, barcodeDuplicateSecond)
                     .Build();
 
                 //act
@@ -185,15 +198,15 @@ namespace BunningsTest.TransformDataServiceTests
                 var barcodeDuplicateSecond = "2";
                 var skuInCompanyB_Second = "d";
                 var skuInCompanyB_First = "c";
-                var companyA = new TestHarness_Company("A")
-                    .With_SupplierProductBarcode(1, "a", barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(1, "b", barcodeDuplicateSecond)
+                var companyA = new TestHarnessCompany("A")
+                    .WithSupplierProductBarcode(1, "a", barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(1, "b", barcodeDuplicateSecond)
                     .Build();
 
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, skuInCompanyB_First, barcodeDuplicateFirst)
-                    .With_SupplierProductBarcode(2, skuInCompanyB_Second, barcodeDuplicateSecond)
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, skuInCompanyB_First, barcodeDuplicateFirst)
+                    .WithSupplierProductBarcode(2, skuInCompanyB_Second, barcodeDuplicateSecond)
                     .Build();
 
                 //act
@@ -219,15 +232,15 @@ namespace BunningsTest.TransformDataServiceTests
                 var companyBName = "B";
                 var companyAName = "A";
 
-                var companyA = new TestHarness_Company(companyAName)
-                    .With_SupplierProductBarcode(1, firstSKU, "1")
-                    .With_Catalog(firstSKU, descriptionOfFirstSKU)
+                var companyA = new TestHarnessCompany(companyAName)
+                    .WithSupplierProductBarcode(1, firstSKU, "1")
+                    .WithCatalog(firstSKU, descriptionOfFirstSKU)
                     .Build();
 
 
-                var companyB = new TestHarness_Company(companyBName)
-                    .With_SupplierProductBarcode(2, secondSKU, "2")
-                    .With_Catalog(secondSKU, descriptionOfSecondSKU)
+                var companyB = new TestHarnessCompany(companyBName)
+                    .WithSupplierProductBarcode(2, secondSKU, "2")
+                    .WithCatalog(secondSKU, descriptionOfSecondSKU)
                     .Build();
 
                 IEnumerable<SupplierProductBarcode> duplicateSku = new List<SupplierProductBarcode>();
@@ -235,9 +248,10 @@ namespace BunningsTest.TransformDataServiceTests
                 var commonCatalog = new TransformDataService().CreateCommonCatalog(companyA, companyB, duplicateSku);
 
                 //arrange
-                Assert.IsTrue(commonCatalog.Count() == 2);
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfSecondSKU && x.Source == companyBName && x.SKU == secondSKU));
+                var commonCatalogs = commonCatalog.ToList();
+                Assert.IsTrue(commonCatalogs.Count() == 2);
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfSecondSKU && x.Source == companyBName && x.SKU == secondSKU));
             }
 
             [Test]
@@ -250,15 +264,15 @@ namespace BunningsTest.TransformDataServiceTests
                 var companyAName = "A";
                 var duplicateBarcode = "1";
 
-                var companyA = new TestHarness_Company(companyAName)
-                    .With_SupplierProductBarcode(1, firstSKU, duplicateBarcode)
-                    .With_Catalog(firstSKU, descriptionOfFirstSKU)
+                var companyA = new TestHarnessCompany(companyAName)
+                    .WithSupplierProductBarcode(1, firstSKU, duplicateBarcode)
+                    .WithCatalog(firstSKU, descriptionOfFirstSKU)
                     .Build();
 
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, secondSKU, duplicateBarcode)
-                    .With_Catalog(secondSKU, "description of bb")
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, secondSKU, duplicateBarcode)
+                    .WithCatalog(secondSKU, "description of bb")
                     .Build();
 
                 //act
@@ -274,8 +288,9 @@ namespace BunningsTest.TransformDataServiceTests
                 var commonCatalog = new TransformDataService().CreateCommonCatalog(companyA, companyB, duplicateSku);
 
                 //arrange
-                Assert.IsTrue(commonCatalog.Count() == 1);
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
+                var commonCatalogs = commonCatalog.ToList();
+                Assert.IsTrue(commonCatalogs.Count() == 1);
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
             }
 
             [Test]
@@ -295,19 +310,19 @@ namespace BunningsTest.TransformDataServiceTests
                 var FirstDuplicateBarcode = "1";
                 var SecondDuplicateBarcode = "2";
 
-                var companyA = new TestHarness_Company(companyAName)
-                    .With_SupplierProductBarcode(1, firstSKU, FirstDuplicateBarcode)
-                    .With_Catalog(firstSKU, descriptionOfFirstSKU)
-                    .With_SupplierProductBarcode(1, secondSKU, SecondDuplicateBarcode)
-                    .With_Catalog(secondSKU, descriptionOfSecondSKU)
+                var companyA = new TestHarnessCompany(companyAName)
+                    .WithSupplierProductBarcode(1, firstSKU, FirstDuplicateBarcode)
+                    .WithCatalog(firstSKU, descriptionOfFirstSKU)
+                    .WithSupplierProductBarcode(1, secondSKU, SecondDuplicateBarcode)
+                    .WithCatalog(secondSKU, descriptionOfSecondSKU)
                     .Build();
 
 
-                var companyB = new TestHarness_Company("B")
-                    .With_SupplierProductBarcode(2, thirdSKU, FirstDuplicateBarcode)
-                    .With_Catalog(thirdSKU, descriptionOfThirdSKU)
-                    .With_SupplierProductBarcode(2, fourthSKU, SecondDuplicateBarcode)
-                    .With_Catalog(fourthSKU, descriptionOfFourthSKU)
+                var companyB = new TestHarnessCompany("B")
+                    .WithSupplierProductBarcode(2, thirdSKU, FirstDuplicateBarcode)
+                    .WithCatalog(thirdSKU, descriptionOfThirdSKU)
+                    .WithSupplierProductBarcode(2, fourthSKU, SecondDuplicateBarcode)
+                    .WithCatalog(fourthSKU, descriptionOfFourthSKU)
                     .Build();
 
                 //act
@@ -329,9 +344,10 @@ namespace BunningsTest.TransformDataServiceTests
                 var commonCatalog = new TransformDataService().CreateCommonCatalog(companyA, companyB, duplicateSku);
 
                 //arrange
-                Assert.IsTrue(commonCatalog.Count() == 2);
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfSecondSKU && x.Source == companyAName && x.SKU == secondSKU));
+                var commonCatalogs = commonCatalog.ToList();
+                Assert.IsTrue(commonCatalogs.Count() == 2);
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfSecondSKU && x.Source == companyAName && x.SKU == secondSKU));
             }
 
             [Test]
@@ -353,19 +369,19 @@ namespace BunningsTest.TransformDataServiceTests
                 var SecondUniqueBarcode = "2";
                 var ThirdUniqueBarcode = "2";
 
-                var companyA = new TestHarness_Company(companyAName)
-                    .With_SupplierProductBarcode(1, firstSKU, FirstDuplicateBarcode)
-                    .With_Catalog(firstSKU, descriptionOfFirstSKU)
-                    .With_SupplierProductBarcode(1, secondSKU, SecondUniqueBarcode)
-                    .With_Catalog(secondSKU, descriptionOfSecondSKU)
+                var companyA = new TestHarnessCompany(companyAName)
+                    .WithSupplierProductBarcode(1, firstSKU, FirstDuplicateBarcode)
+                    .WithCatalog(firstSKU, descriptionOfFirstSKU)
+                    .WithSupplierProductBarcode(1, secondSKU, SecondUniqueBarcode)
+                    .WithCatalog(secondSKU, descriptionOfSecondSKU)
                     .Build();
 
 
-                var companyB = new TestHarness_Company(companyBName)
-                    .With_SupplierProductBarcode(2, thirdSKU, FirstDuplicateBarcode)
-                    .With_Catalog(thirdSKU, descriptionOfThirdSKU)
-                    .With_SupplierProductBarcode(2, fourthSKU, ThirdUniqueBarcode)
-                    .With_Catalog(fourthSKU, descriptionOfFourthSKU)
+                var companyB = new TestHarnessCompany(companyBName)
+                    .WithSupplierProductBarcode(2, thirdSKU, FirstDuplicateBarcode)
+                    .WithCatalog(thirdSKU, descriptionOfThirdSKU)
+                    .WithSupplierProductBarcode(2, fourthSKU, ThirdUniqueBarcode)
+                    .WithCatalog(fourthSKU, descriptionOfFourthSKU)
                     .Build();
 
                 //act
@@ -381,10 +397,11 @@ namespace BunningsTest.TransformDataServiceTests
                 var commonCatalog = new TransformDataService().CreateCommonCatalog(companyA, companyB, duplicateSku);
 
                 //arrange
-                Assert.IsTrue(commonCatalog.Count() == 3);
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfSecondSKU && x.Source == companyAName && x.SKU == secondSKU));
-                Assert.IsTrue(commonCatalog.Any(x => x.Description == descriptionOfFourthSKU && x.Source == companyBName && x.SKU == fourthSKU));
+                var commonCatalogs = commonCatalog.ToList();
+                Assert.IsTrue(commonCatalogs.Count() == 3);
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfFirstSKU && x.Source == companyAName && x.SKU == firstSKU));
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfSecondSKU && x.Source == companyAName && x.SKU == secondSKU));
+                Assert.IsTrue(commonCatalogs.Any(x => x.Description == descriptionOfFourthSKU && x.Source == companyBName && x.SKU == fourthSKU));
             }
         }
     }
