@@ -7,66 +7,70 @@ namespace BunningsTest.ValidationServiceTests
 {
     public class VerificationServiceTest
     {
-        [Test]
-        public void Given_Four_Arguments_That_Are_Valid_Files_Then_ValidInputs_Should_Return_True()
+
+        public class ValidInputs
         {
-            //arrange
-            var rawInput = new List<string> {"barcodesA.csv", "barcodesB.csv", "catalogA.csv", "catalogB.csv"};
-            var input = rawInput.Select(x => $"ValidationServiceTests/Inputs/{x}").ToList();
+            [Test]
+            public void Given_Four_Arguments_That_Are_Valid_Files_Then_Should_Return_True()
+            {
+                //arrange
+                var rawInput = new List<string> {"barcodesA.csv", "barcodesB.csv", "catalogA.csv", "catalogB.csv"};
+                var input = rawInput.Select(x => $"ValidationServiceTests/Inputs/{x}").ToList();
 
-            //Act
-            var verificationService = new VerificationService();
-            var validInput = verificationService.ValidInputs(input);
+                //Act
+                var verificationService = new VerificationService();
+                var isValidInput = verificationService.ValidInputs(input);
 
-            //Assert
-            Assert.IsTrue(validInput);
-            Assert.IsNull(verificationService.Message);
-        }
+                //Assert
+                Assert.IsTrue(isValidInput);
+                Assert.IsNull(verificationService.Message);
+            }
 
-        [Test]
-        public void Given_Four_Arguments_That_Are_Not_Valid_Files_Then_ValidInputs_Should_Return_False()
-        {
-            //arrange
-            var rawInput = new List<string> {"doesNotExist.csv", "doesNotExist.csv", "doesNotExist.csv", "doesNotExist.csv"};
-            var input = rawInput.Select(x => $"ValidationServiceTests/Inputs/{x}").ToList();
+            [Test]
+            public void Given_Four_Arguments_That_Are_Not_Valid_Files_Then_ValidInputs_Should_Return_False()
+            {
+                //arrange
+                var rawInput = new List<string> {"doesNotExist.csv", "doesNotExist.csv", "doesNotExist.csv", "doesNotExist.csv"};
+                var input = rawInput.Select(x => $"ValidationServiceTests/Inputs/{x}").ToList();
 
-            //Act
-            var verificationService = new VerificationService();
-            var validInput = verificationService.ValidInputs(input);
+                //Act
+                var verificationService = new VerificationService();
+                var isValidInput = verificationService.ValidInputs(input);
 
-            //Assert
-            Assert.IsFalse(validInput);
-            Assert.IsNotEmpty(verificationService.Message);
-        }
+                //Assert
+                Assert.IsFalse(isValidInput);
+                Assert.IsNotEmpty(verificationService.Message);
+            }
 
-        [Test]
-        public void Given_less_than_four_Arguments_Then_ValidInputs_Should_Return_False()
-        {
-            //arrange
-            var input = new List<string> {"a", "b", "c"};
+            [Test]
+            public void Given_Less_Than_Four_Arguments_Should_Return_False()
+            {
+                //arrange
+                var input = new List<string> {"a", "b", "c"};
 
-            //Act
-            var verificationService = new VerificationService();
-            var validInput = verificationService.ValidInputs(input);
+                //Act
+                var verificationService = new VerificationService();
+                var isValidInput = verificationService.ValidInputs(input);
 
-            //Assert
-            Assert.IsFalse(validInput);
-            Assert.IsNotEmpty(verificationService.Message);
-        }
+                //Assert
+                Assert.IsFalse(isValidInput);
+                Assert.IsNotEmpty(verificationService.Message);
+            }
 
-        [Test]
-        public void Given_more_than_four_Arguments_Then_ValidInputs_Should_Return_False()
-        {
-            //arrange
-            var input = new List<string> {"a", "b", "c", "d", "e"};
+            [Test]
+            public void Given_More_Than_Four_Arguments_Should_Return_False()
+            {
+                //arrange
+                var input = new List<string> {"a", "b", "c", "d", "e"};
 
-            //Act
-            var verificationService = new VerificationService();
-            var validInput = verificationService.ValidInputs(input);
+                //Act
+                var verificationService = new VerificationService();
+                var isValidInput = verificationService.ValidInputs(input);
 
-            //Assert
-            Assert.IsFalse(validInput);
-            Assert.IsNotEmpty(verificationService.Message);
+                //Assert
+                Assert.IsFalse(isValidInput);
+                Assert.IsNotEmpty(verificationService.Message);
+            }
         }
     }
 }
