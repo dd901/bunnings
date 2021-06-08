@@ -13,7 +13,6 @@ namespace Bunnings
         private readonly ITransformDataService _transformDataService;
         private readonly IVerificationService _verificationService;
 
-
         public App(IVerificationService verificationService, ICsvImportExportService csvImportExportService, ITransformDataService transformDataService)
         {
             _transformDataService = transformDataService;

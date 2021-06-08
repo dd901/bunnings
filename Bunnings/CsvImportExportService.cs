@@ -27,7 +27,6 @@ namespace Bunnings
             }
         }
 
-
         public void Export<T>(string fileName, IEnumerable<T> toExport)
         {
             try

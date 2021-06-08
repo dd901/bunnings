@@ -27,24 +27,35 @@ namespace Bunnings
                 select supplierProductBarcodeFromB;
         }
 
-
         public IEnumerable<CommonCatalog> CreateCommonCatalog(Company companyA, Company companyB, IEnumerable<SupplierProductBarcode> duplicateSku)
         {
             var combined = new List<CommonCatalog>();
 
-            var barcodesAGrouped = companyA.SupplierProductBarcodes.GroupBy(x => x.SKU).Select(x => x.Key);
-            var commonCatalogs = barcodesAGrouped.Select(x => new CommonCatalog(x, companyA.Catalogs.Where(y => y.SKU == x).First().Description, companyA.Name));
-            combined.AddRange(commonCatalogs);
-
-
-            var barcodesBGrouped = companyB.SupplierProductBarcodes.GroupBy(x => x.SKU).Select(x => x.Key);
-
-            foreach (var barcodesBsku in barcodesBGrouped)
-                if (duplicateSku.All(x => x.SKU != barcodesBsku))
-                    combined.Add(new CommonCatalog(barcodesBsku, companyB.Catalogs.Where(y => y.SKU == barcodesBsku).First().Description, companyB.Name));
-
+            var companyAUniqueSKUs = getGroupedSKU(companyA);
+            var commonCatalogsForCompanyA = CreateCommonCatalogs(companyA, companyAUniqueSKUs);
+            combined.AddRange(commonCatalogsForCompanyA);
+   
+            var companyBUniqueSkus = getGroupedSKU(companyB);
+            var duplicateSKU = duplicateSku.ToList();
+            
+            foreach (var companyBUniqueSku in companyBUniqueSkus)
+                if (duplicateSKU.All(x => x.SKU != companyBUniqueSku))
+                {
+                    var commonCatalogForCompanyBsku = CreateCommonCatalogs(companyB, new string[]{companyBUniqueSku});
+                    combined.AddRange(commonCatalogForCompanyBsku);
+                }
 
             return combined;
+        }
+
+        private static IEnumerable<CommonCatalog> CreateCommonCatalogs(Company companyA, IEnumerable<string> companyAUniqueSKUs)
+        {
+            return companyAUniqueSKUs.Select(x => new CommonCatalog(x, companyA.Catalogs.First(y => y.SKU == x).Description, companyA.Name));
+        }
+
+        private static IEnumerable<string> getGroupedSKU(Company companyA)
+        {
+            return companyA.SupplierProductBarcodes.GroupBy(x => x.SKU).Select(x => x.Key);
         }
     }
 }
