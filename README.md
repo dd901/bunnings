@@ -7,24 +7,24 @@
 ##From IDE
 open the .sln in your favourite .net ide and build the solution from there.
 
-##From CLI
+## From CLI
  
 from the root directory `dotnet build `
 
-#Tests
-##From IDE
+# Tests
+## From IDE
 open the .sln in your favourite .net ide
 1. run nuget restore
 2. build the testing project
 3. run the tests (right click -> run tests)
 
 
-##From CLI
+## From CLI
 from the root directory
 `dotnet test`
 
-#Running
-##From IDE
+# Running
+## From IDE
 
 
 1. open the .sln in your favourite .net ide
@@ -33,7 +33,7 @@ from the root directory
 4. run the project
 5. output should be at `\Bunnings\bin\Debug\net5.0\output.csv`  you can confirm output file location from the message in the console.
 
-##From CLI
+## From CLI
 ensure the project has been built.
 1. modify csv's in Inputs folder
 2. from your terminal `cd Bunnings`
@@ -41,13 +41,14 @@ ensure the project has been built.
 4. open `outpout.csv` from current folder. you can confirm output file location from the message in the console. 
 
 
-#Assumptions
+# Assumptions
 1. SKU in barcodes.csv are present in catalog.sv
 2. the order of the output rows does not matter
 3. Input files are supplied in order: barcodesA.csv barcodesB.csv catalogA.csv catalogB.csv
 4. output file is called output.csv
 
 
-#Future improvements
+# Future improvements
 1. Support for more than just 2 companies.
+2. GetDuplicateSupplierProductBarcodesFromCompanyB can be a private method, and tests removed
 
