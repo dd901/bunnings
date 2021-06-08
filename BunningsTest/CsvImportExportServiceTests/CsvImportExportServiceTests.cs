@@ -37,7 +37,7 @@ namespace BunningsTest.CsvImportExportServiceTests
                 //act
                 var importedSPB = new CsvImportExportService().Import<SupplierProductBarcode>(fileToImport).ToList();
 
-                //arrange
+                //assert
                 Assert.IsTrue(importedSPB.Count() == 4);
                 Assert.IsTrue(importedSPB.Any(x => x.Barcode == "abc" && x.SKU == "b" && x.SupplierID == 1));
                 Assert.IsTrue(importedSPB.Any(x => x.Barcode == "def" && x.SKU == "bb" && x.SupplierID == 11));
